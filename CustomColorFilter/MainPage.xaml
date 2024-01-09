@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:main="clr-namespace:CustomColorFilter"
+             xmlns:converters="clr-namespace:CustomColorFilter.Converters"
+             x:Class="CustomColorFilter.MainPage"
+             x:DataType="main:MainPageViewModel">
+    <ContentPage.Resources>
+        <converters:BooleanReverseConverter x:Key="BooleanReverseConverter" />
+    </ContentPage.Resources>
+    <Grid RowDefinitions="2*,3*" ColumnDefinitions="3*,2*">
+        <Grid
+            Grid.Row="0"
+            Grid.Column="0"
+            VerticalOptions="Center"
+            HorizontalOptions="Center"
+            RowDefinitions="40,40"
+            ColumnDefinitions="100,100"
+            RowSpacing="5"
+            ColumnSpacing="5">
+            <Grid.Resources>
+                <Style TargetType="Label">
+                    <Setter Property="HorizontalOptions" Value="Center"/>
+                    <Setter Property="VerticalOptions" Value="Center"/>
+                    <Setter Property="VerticalTextAlignment" Value="Center"/>
+                   <Setter Property="TextColor" Value="Black" />
+                </Style>
+            </Grid.Resources>
+            <Border BackgroundColor="#FF0000" Grid.Row="0" Grid.Column="0" Stroke="#FF0000">
+                <Label Text="Red"/> 
+            </Border>
+            <Border BackgroundColor="#00FF00" Grid.Row="0" Grid.Column="1" Stroke="#00FF00">
+                <Label Text="Green"/> 
+            </Border>
+            <Border BackgroundColor="#0000FF" Grid.Row="1" Grid.Column="0" Stroke="#0000FF">
+                <Label Text="Blue"/> 
+            </Border>
+            <Border BackgroundColor="Yellow" Grid.Row="1" Grid.Column="1" Stroke="Yellow">
+                <Label Text="Yellow"/> 
+            </Border>
+        </Grid>
+        <Grid
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="20"
+            RowDefinitions="*,*,*,*,*,*"
+            ColumnDefinitions="*,*,*,*,*,*"
+            RowSpacing="5"
+            ColumnSpacing="5">
+            <Grid.Resources>
+                <Style TargetType="Label">
+                    <Setter Property="HorizontalOptions" Value="Center"/>
+                    <Setter Property="VerticalOptions" Value="Center"/>
+                    <Setter Property="VerticalTextAlignment" Value="Center"/>
+                </Style>
+                <Style TargetType="Entry">
+                    <Setter Property="Keyboard" Value="Numeric"/>
+                </Style>
+            </Grid.Resources>
+            <Label Grid.Row="0" Grid.Column="1">Red</Label>
+            <Label Grid.Row="0" Grid.Column="2">Green</Label>
+            <Label Grid.Row="0" Grid.Column="3">Blue</Label>
+            <Label Grid.Row="0" Grid.Column="4">?1</Label>
+            <Label Grid.Row="0" Grid.Column="5">?2</Label>
+            
+            <Label Grid.Row="1" Grid.Column="0">Red</Label>
+            <Entry Grid.Row="1" Grid.Column="1" Text="{Binding Path=SelectedFilter.F00}"></Entry>
+            <Entry Grid.Row="1" Grid.Column="2" Text="{Binding Path=SelectedFilter.F01}"></Entry>
+            <Entry Grid.Row="1" Grid.Column="3" Text="{Binding Path=SelectedFilter.F02}"></Entry>
+            <Entry Grid.Row="1" Grid.Column="4" Text="{Binding Path=SelectedFilter.F03}"></Entry>
+            <Entry Grid.Row="1" Grid.Column="5" Text="{Binding Path=SelectedFilter.F04}"></Entry>
+            
+            <Label Grid.Row="2" Grid.Column="0">Green</Label>
+            <Entry Grid.Row="2" Grid.Column="1" Text="{Binding Path=SelectedFilter.F10}"></Entry>
+            <Entry Grid.Row="2" Grid.Column="2" Text="{Binding Path=SelectedFilter.F11}"></Entry>
+            <Entry Grid.Row="2" Grid.Column="3" Text="{Binding Path=SelectedFilter.F12}"></Entry>
+            <Entry Grid.Row="2" Grid.Column="4" Text="{Binding Path=SelectedFilter.F13}"></Entry>
+            <Entry Grid.Row="2" Grid.Column="5" Text="{Binding Path=SelectedFilter.F14}"></Entry>
+                             
+            <Label Grid.Row="3" Grid.Column="0">Blue</Label>
+            <Entry Grid.Row="3" Grid.Column="1" Text="{Binding Path=SelectedFilter.F20}"></Entry>
+            <Entry Grid.Row="3" Grid.Column="2" Text="{Binding Path=SelectedFilter.F21}"></Entry>
+            <Entry Grid.Row="3" Grid.Column="3" Text="{Binding Path=SelectedFilter.F22}"></Entry>
+            <Entry Grid.Row="3" Grid.Column="4" Text="{Binding Path=SelectedFilter.F23}"></Entry>
+            <Entry Grid.Row="3" Grid.Column="5" Text="{Binding Path=SelectedFilter.F24}"></Entry>
+            
+            <Label Grid.Row="4" Grid.Column="0">?1</Label>
+            <Entry Grid.Row="4" Grid.Column="1" Text="{Binding Path=SelectedFilter.F30}"></Entry>
+            <Entry Grid.Row="4" Grid.Column="2" Text="{Binding Path=SelectedFilter.F31}"></Entry>
+            <Entry Grid.Row="4" Grid.Column="3" Text="{Binding Path=SelectedFilter.F32}"></Entry>
+            <Entry Grid.Row="4" Grid.Column="4" Text="{Binding Path=SelectedFilter.F33}"></Entry>
+            <Entry Grid.Row="4" Grid.Column="5" Text="{Binding Path=SelectedFilter.F34}"></Entry>
+            
+            <Label Grid.Row="5" Grid.Column="0">?2</Label>
+            <Entry Grid.Row="5" Grid.Column="1" Text="{Binding Path=SelectedFilter.F40}"></Entry>
+            <Entry Grid.Row="5" Grid.Column="2" Text="{Binding Path=SelectedFilter.F41}"></Entry>
+            <Entry Grid.Row="5" Grid.Column="3" Text="{Binding Path=SelectedFilter.F42}"></Entry>
+            <Entry Grid.Row="5" Grid.Column="4" Text="{Binding Path=SelectedFilter.F43}"></Entry>
+            <Entry Grid.Row="5" Grid.Column="5" Text="{Binding Path=SelectedFilter.F44}"></Entry>
+        </Grid>
+        
+        <Grid
+            Grid.Row="0"
+            Grid.Column="1">
+            <StackLayout Orientation="Vertical" HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
+                <Picker ItemsSource="{Binding Path=AvailableFilters}" ItemDisplayBinding="{Binding Path=Name}" SelectedItem="{Binding Path=SelectedFilter}"></Picker>
+                <StackLayout Orientation="Horizontal" Spacing="10">
+                    <Label Text="FilterName" VerticalOptions="Center" />
+                    <Entry Text="{Binding Path=SelectedFilter.Name}" />
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" Spacing="10">
+                    <Button
+                        Text="Add Custom Filter" />
+                    <Button
+                        Text="Delete Custom Filter"
+                        IsEnabled="{Binding Path=SelectedFilter.IsBuiltin, Converter={StaticResource BooleanReverseConverter}}"/>
+                </StackLayout>
+            </StackLayout>
+        </Grid>
+        
+        <Grid Grid.Row="1" Grid.Column="1">
+            <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
+                <Button
+                    Text="Apply Filter"
+                    Command="{Binding Path=ApplyFilterCommand}" />
+                <Button
+                    Text="Disable Filter"
+                    Command="{Binding Path=DisableFilterCommand}" />
+                <Button
+                    Text="Save Values"
+                    Command="{Binding Path=SaveValuesCommand}"
+                    IsEnabled="{Binding Path=SelectedFilter.IsBuiltin, Converter={StaticResource BooleanReverseConverter}}"/>
+            </StackLayout>
+        </Grid>
+    </Grid>
+
+</ContentPage>
