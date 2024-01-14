@@ -14,10 +14,12 @@ namespace CustomColorFilter;
 public partial class MainPageViewModel : ObservableObject
 {
     private IColorFilter colorFilter;
+    private IFileService fileService;
 
-    public MainPageViewModel(IColorFilter colorFilter)
+    public MainPageViewModel(IColorFilter colorFilter, IFileService fileService)
     {
         this.colorFilter = colorFilter;
+        this.fileService = fileService;
 
         this.AvailableFilters = [
             new("Identity", BuiltinMatrices.Identity, isBuiltin: true),
@@ -41,20 +43,67 @@ public partial class MainPageViewModel : ObservableObject
             new("NegativeHueShift180Variation3", BuiltinMatrices.NegativeHueShift180Variation3, isBuiltin: true),
             new("NegativeHueShift180Variation4", BuiltinMatrices.NegativeHueShift180Variation4, isBuiltin: true),
         ];
-        var noRed = new float[,] {
-                {  0.0f,  0.3f,  0.2f,  0.0f,  0.0f },
-                {  0.0f,  1.0f,  0.0f,  0.0f,  0.0f },
-                {  0.0f,  0.0f,  1.0f,  0.0f,  0.0f },
-                {  0.0f,  0.0f,  0.0f,  1.0f,  0.0f },
-                {  0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
-            };
-        this.AvailableFilters.Add(new("NoRed", noRed, isBuiltin: false));
+        var config = this.fileService.GetConfig();
+        foreach (var customFilter in config.CustomFilters)
+        {
+            this.AvailableFilters.Add(new FilterViewModel(customFilter.Name, MatrixHelpers.ToMatrix(customFilter.Matrix, 5), isBuiltin: false));
+        }
+
+        this.PropertyChanged += MainPageViewModel_PropertyChanged;
+        
+        foreach (var filter in this.AvailableFilters)
+        {
+            if (filter.Name == config.SelectedFilter)
+            {
+                this.SelectedFilter = filter;
+                break;
+            }
+        }
+        this.ApplyDefaultFilterOnStart = config.ApplyDefaultFilterOnStart;
+        if (this.ApplyDefaultFilterOnStart && this.SelectedFilter is not null)
+        {
+            this.colorFilter.SetFullScreenColorFilter(this.SelectedFilter.BuildMatrix());
+        }
     }
 
+    private void MainPageViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        switch(e.PropertyName)
+        {
+            case nameof(this.SelectedFilter):
+                this.IsCustomFilter = !this.SelectedFilter.IsBuiltin;
+                this.SelectedFilterName = this.SelectedFilter.Name;
+                this.DeleteCustomFilterCommand.NotifyCanExecuteChanged();
+                break;
+            case nameof(this.SelectedFilterName):
+                if (this.SelectedFilter is not null)
+                {
+                    this.SelectedFilter.Name = this.SelectedFilterName;
+                }
+                break;
+        }
+    }
+
+    [ObservableProperty] private int selectedIndex;
     [ObservableProperty] private FilterViewModel selectedFilter;
+    [ObservableProperty] private string selectedFilterName;
     [ObservableProperty] private bool isFilterSet;
+    [ObservableProperty] private bool isCustomFilter;
+    [ObservableProperty] private bool applyDefaultFilterOnStart;
 
     public ObservableCollection<FilterViewModel> AvailableFilters { get;set; } = new();
+
+    [RelayCommand]
+    public void OnAddCustomFilter()
+    {
+        this.AvailableFilters.Add(new("NewFilter", BuiltinMatrices.Identity, isBuiltin: false));
+    }
+
+    [RelayCommand(CanExecute = nameof(IsCustomFilter))]
+    public void OnDeleteCustomFilter()
+    {
+        this.AvailableFilters.RemoveAt(this.SelectedIndex);
+    }
 
     [RelayCommand]
     public void OnApplyFilter()
@@ -64,18 +113,23 @@ public partial class MainPageViewModel : ObservableObject
         this.DisableFilterCommand.NotifyCanExecuteChanged();
     }
 
-    [RelayCommand]
-    public async Task SaveValues()
-    {
-
-    }
-
     [RelayCommand(CanExecute = nameof(IsFilterSet))]
     public void DisableFilter()
     {
         this.colorFilter.SetFullScreenColorFilter(BuiltinMatrices.Identity);
         this.IsFilterSet = false;
         this.DisableFilterCommand.NotifyCanExecuteChanged();
+    }
+
+    [RelayCommand(CanExecute = nameof(IsCustomFilter))]
+    public async Task SaveValues()
+    {
+        var customFilters = this.AvailableFilters
+            .Where(f => !f.IsBuiltin)
+            .Select(vm => new Filter(vm.Name, MatrixHelpers.ToFlatArray(vm.BuildMatrix())))
+            .ToList();
+        var config = new Configuration(this.SelectedFilterName, this.ApplyDefaultFilterOnStart, customFilters);
+        this.fileService.SaveConfig(config);
     }
 }
 

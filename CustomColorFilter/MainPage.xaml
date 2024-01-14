@@ -106,14 +106,15 @@
                 <Picker ItemsSource="{Binding Path=AvailableFilters}" ItemDisplayBinding="{Binding Path=Name}" SelectedItem="{Binding Path=SelectedFilter}"></Picker>
                 <StackLayout Orientation="Horizontal" Spacing="10">
                     <Label Text="FilterName" VerticalOptions="Center" />
-                    <Entry Text="{Binding Path=SelectedFilter.Name}" />
+                    <Entry Text="{Binding Path=SelectedFilterName}" />
                 </StackLayout>
                 <StackLayout Orientation="Horizontal" Spacing="10">
                     <Button
-                        Text="Add Custom Filter" />
+                        Text="Add Custom Filter"
+                        Command="{Binding Path=AddCustomFilterCommand}"/>
                     <Button
                         Text="Delete Custom Filter"
-                        IsEnabled="{Binding Path=SelectedFilter.IsBuiltin, Converter={StaticResource BooleanReverseConverter}}"/>
+                        Command="{Binding Path=DeleteCustomFilterCommand}"/>
                 </StackLayout>
             </StackLayout>
         </Grid>
@@ -130,6 +131,10 @@
                     Text="Save Values"
                     Command="{Binding Path=SaveValuesCommand}"
                     IsEnabled="{Binding Path=SelectedFilter.IsBuiltin, Converter={StaticResource BooleanReverseConverter}}"/>
+                <StackLayout Orientation="Horizontal" Spacing="10">
+                    <Label Text="Apply Default Filter On Start" VerticalOptions="Center" VerticalTextAlignment="Center" />
+                    <Switch IsToggled="{Binding Path=ApplyDefaultFilterOnStart}" />
+                </StackLayout>
             </StackLayout>
         </Grid>
     </Grid>

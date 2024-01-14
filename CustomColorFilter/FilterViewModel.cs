@@ -75,6 +75,8 @@ namespace CustomColorFilter
             this.F42 = matrix[4, 2];
             this.F43 = matrix[4, 3];
             this.F44 = matrix[4, 4];
+
+            this.IsBuiltin = isBuiltin;
         }
 
         public float[,] BuildMatrix()

@@ -20,6 +20,7 @@ namespace CustomColorFilter
 
 #if WINDOWS
             builder.Services.AddSingleton<IColorFilter, Platforms.Windows.MagnificationColorFilter>();
+            builder.Services.AddSingleton<IFileService, Platforms.Windows.WindowsFileService>();
 #endif
 
             builder.Services
