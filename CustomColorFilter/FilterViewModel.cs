@@ -84,7 +84,7 @@ namespace CustomColorFilter
             {
                 { F00, F01, F02, F03, F04 },
                 { F10, F11, F12, F13, F14 },
-                { F20, F21, F22, F22, F24 },
+                { F20, F21, F22, F23, F24 },
                 { F30, F31, F32, F33, F34 },
                 { F40, F41, F42, F43, F44 },
             };

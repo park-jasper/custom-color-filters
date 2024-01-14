@@ -135,6 +135,10 @@
                     <Label Text="Apply Default Filter On Start" VerticalOptions="Center" VerticalTextAlignment="Center" />
                     <Switch IsToggled="{Binding Path=ApplyDefaultFilterOnStart}" />
                 </StackLayout>
+                <StackLayout Orientation="Horizontal" Spacing="10">
+                    <Label Text="Launch App on Startup" VerticalOptions="Center" VerticalTextAlignment="Center" />
+                    <Switch IsToggled="{Binding Path=LaunchOnStartup}" />
+                </StackLayout>
             </StackLayout>
         </Grid>
     </Grid>

@@ -13,14 +13,18 @@ namespace CustomColorFilter;
 
 public partial class MainPageViewModel : ObservableObject
 {
-    private IColorFilter colorFilter;
-    private IFileService fileService;
+    private readonly IColorFilter colorFilter;
+    private readonly IFileService fileService;
+    private readonly IStartupService startupService;
 
-    public MainPageViewModel(IColorFilter colorFilter, IFileService fileService)
+    public MainPageViewModel(
+        IColorFilter colorFilter,
+        IFileService fileService,
+        IStartupService startupService)
     {
         this.colorFilter = colorFilter;
         this.fileService = fileService;
-
+        this.startupService = startupService;
         this.AvailableFilters = [
             new("Identity", BuiltinMatrices.Identity, isBuiltin: true),
             new("Protanopia", BuiltinMatrices.Protanopia, isBuiltin: true),
@@ -48,6 +52,7 @@ public partial class MainPageViewModel : ObservableObject
         {
             this.AvailableFilters.Add(new FilterViewModel(customFilter.Name, MatrixHelpers.ToMatrix(customFilter.Matrix, 5), isBuiltin: false));
         }
+        this.ApplyDefaultFilterOnStart = config.ApplyDefaultFilterOnStart;
 
         this.PropertyChanged += MainPageViewModel_PropertyChanged;
         
@@ -59,14 +64,26 @@ public partial class MainPageViewModel : ObservableObject
                 break;
             }
         }
-        this.ApplyDefaultFilterOnStart = config.ApplyDefaultFilterOnStart;
+
+        this.InitializeStartupService();
+    }
+
+    private async void InitializeStartupService()
+    {
+        await this.startupService.InitializeAsync();
+        this.LaunchOnStartup = this.startupService.IsStartupEnabled();
+    }
+
+    public void OnAppearing()
+    {
         if (this.ApplyDefaultFilterOnStart && this.SelectedFilter is not null)
         {
             this.colorFilter.SetFullScreenColorFilter(this.SelectedFilter.BuildMatrix());
+            this.DisableFilterCommand.NotifyCanExecuteChanged();
         }
     }
 
-    private void MainPageViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    private async void MainPageViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         switch(e.PropertyName)
         {
@@ -81,6 +98,10 @@ public partial class MainPageViewModel : ObservableObject
                     this.SelectedFilter.Name = this.SelectedFilterName;
                 }
                 break;
+            case nameof(this.LaunchOnStartup):
+                var isEnabled = await this.startupService.SetIsStartupEnabledAsync(this.LaunchOnStartup);
+                this.LaunchOnStartup = isEnabled;
+                break;
         }
     }
 
@@ -90,6 +111,7 @@ public partial class MainPageViewModel : ObservableObject
     [ObservableProperty] private bool isFilterSet;
     [ObservableProperty] private bool isCustomFilter;
     [ObservableProperty] private bool applyDefaultFilterOnStart;
+    [ObservableProperty] private bool launchOnStartup;
 
     public ObservableCollection<FilterViewModel> AvailableFilters { get;set; } = new();
 
