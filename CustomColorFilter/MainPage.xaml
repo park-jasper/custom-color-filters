@@ -60,8 +60,8 @@
             <Label Grid.Row="0" Grid.Column="1">Red</Label>
             <Label Grid.Row="0" Grid.Column="2">Green</Label>
             <Label Grid.Row="0" Grid.Column="3">Blue</Label>
-            <Label Grid.Row="0" Grid.Column="4">?1</Label>
-            <Label Grid.Row="0" Grid.Column="5">?2</Label>
+            <Label Grid.Row="0" Grid.Column="4">Alpha</Label>
+            <Label Grid.Row="0" Grid.Column="5">Constant</Label>
             
             <Label Grid.Row="1" Grid.Column="0">Red</Label>
             <Entry Grid.Row="1" Grid.Column="1" Text="{Binding Path=SelectedFilter.F00}"></Entry>
@@ -84,14 +84,14 @@
             <Entry Grid.Row="3" Grid.Column="4" Text="{Binding Path=SelectedFilter.F23}"></Entry>
             <Entry Grid.Row="3" Grid.Column="5" Text="{Binding Path=SelectedFilter.F24}"></Entry>
             
-            <Label Grid.Row="4" Grid.Column="0">?1</Label>
+            <Label Grid.Row="4" Grid.Column="0">Alpha</Label>
             <Entry Grid.Row="4" Grid.Column="1" Text="{Binding Path=SelectedFilter.F30}"></Entry>
             <Entry Grid.Row="4" Grid.Column="2" Text="{Binding Path=SelectedFilter.F31}"></Entry>
             <Entry Grid.Row="4" Grid.Column="3" Text="{Binding Path=SelectedFilter.F32}"></Entry>
             <Entry Grid.Row="4" Grid.Column="4" Text="{Binding Path=SelectedFilter.F33}"></Entry>
             <Entry Grid.Row="4" Grid.Column="5" Text="{Binding Path=SelectedFilter.F34}"></Entry>
             
-            <Label Grid.Row="5" Grid.Column="0">?2</Label>
+            <Label Grid.Row="5" Grid.Column="0">Constant</Label>
             <Entry Grid.Row="5" Grid.Column="1" Text="{Binding Path=SelectedFilter.F40}"></Entry>
             <Entry Grid.Row="5" Grid.Column="2" Text="{Binding Path=SelectedFilter.F41}"></Entry>
             <Entry Grid.Row="5" Grid.Column="3" Text="{Binding Path=SelectedFilter.F42}"></Entry>
