@@ -79,6 +79,7 @@ public partial class MainPageViewModel : ObservableObject
         if (this.ApplyDefaultFilterOnStart && this.SelectedFilter is not null)
         {
             this.colorFilter.SetFullScreenColorFilter(this.SelectedFilter.BuildMatrix());
+            this.IsFilterSet = true;
             this.DisableFilterCommand.NotifyCanExecuteChanged();
         }
     }
