@@ -1,63 +1,57 @@
-﻿using CustomColorFilter.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.Contracts;
 using Windows.ApplicationModel;
 
-namespace CustomColorFilter.Platforms.Windows
+namespace CustomColorFilter.Platforms.Windows;
+
+public class WindowsStartupService : IStartupService
 {
-    public class WindowsStartupService : IStartupService
+    private StartupTask startupTask;
+
+    public async Task InitializeAsync()
     {
-        private StartupTask startupTask;
+        this.startupTask = await StartupTask.GetAsync("LaunchOnStartupTaskId");
+    }
+    public bool IsStartupEnabled()
+    {
+        return this.startupTask.State switch
+        {
+            StartupTaskState.Enabled => true,
+            StartupTaskState.Disabled => false,
+            StartupTaskState.DisabledByUser => false,
+            StartupTaskState.DisabledByPolicy => false,
+            _ => true,
+        };
+    }
 
-        public async Task InitializeAsync()
+    public async Task<bool> SetIsStartupEnabledAsync(bool setIsEnabled)
+    {
+        if (setIsEnabled)
         {
-            this.startupTask = await StartupTask.GetAsync("LaunchOnStartupTaskId");
-        }
-        public bool IsStartupEnabled()
-        {
-            return this.startupTask.State switch
+            switch (this.startupTask.State)
             {
-                StartupTaskState.Enabled => true,
-                StartupTaskState.Disabled => false,
-                StartupTaskState.DisabledByUser => false,
-                StartupTaskState.DisabledByPolicy => false,
-                _ => true,
-            };
-        }
-
-        public async Task<bool> SetIsStartupEnabledAsync(bool setIsEnabled)
-        {
-            if (setIsEnabled)
-            {
-                switch (this.startupTask.State)
-                {
-                    case StartupTaskState.Enabled:
-                        return true;
-                    case StartupTaskState.Disabled:
-                        await this.startupTask.RequestEnableAsync();
-                        return true;
-                    case StartupTaskState.DisabledByUser:
-                    case StartupTaskState.DisabledByPolicy:
-                        return false;
-                }
+                case StartupTaskState.Enabled:
+                    return true;
+                case StartupTaskState.Disabled:
+                    await this.startupTask.RequestEnableAsync();
+                    return true;
+                case StartupTaskState.DisabledByUser:
+                case StartupTaskState.DisabledByPolicy:
+                    return false;
             }
-            else
-            {
-                switch (this.startupTask.State)
-                {
-                    case StartupTaskState.Enabled:
-                        this.startupTask.Disable();
-                        return false;
-                    case StartupTaskState.Disabled:
-                    case StartupTaskState.DisabledByUser:
-                    case StartupTaskState.DisabledByPolicy:
-                        return false;
-                }
-            }
-            return false;
         }
+        else
+        {
+            switch (this.startupTask.State)
+            {
+                case StartupTaskState.Enabled:
+                    this.startupTask.Disable();
+                    return false;
+                case StartupTaskState.Disabled:
+                case StartupTaskState.DisabledByUser:
+                case StartupTaskState.DisabledByPolicy:
+                    return false;
+            }
+        }
+        return false;
     }
 }

@@ -1,42 +1,41 @@
 ﻿using CommunityToolkit.Maui;
-using CustomColorFilter.Contracts;
+using Application.Contracts;
 using Microsoft.Extensions.Logging;
 
-namespace CustomColorFilter
+namespace CustomColorFilter;
+
+public static class MauiProgram
 {
-    public static class MauiProgram
+    public static MauiApp CreateMauiApp()
     {
-        public static MauiApp CreateMauiApp()
-        {
-            var builder = MauiApp.CreateBuilder();
-            builder
-                .UseMauiApp<App>()
-                .UseMauiCommunityToolkit()
-                .ConfigureFonts(fonts =>
-                {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
+        var builder = MauiApp.CreateBuilder();
+        builder
+            .UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
+            .ConfigureFonts(fonts =>
+            {
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+            });
 
 #if WINDOWS
-            builder.Services.AddSingleton<IColorFilter, Platforms.Windows.MagnificationColorFilter>();
-            builder.Services.AddSingleton<IFileService, Platforms.Windows.WindowsFileService>();
-            builder.Services.AddSingleton<IStartupService, Platforms.Windows.WindowsStartupService>();
+        builder.Services.AddSingleton<IColorFilter, Platforms.Windows.MagnificationColorFilter>();
+        builder.Services.AddSingleton<IFileService, Platforms.Windows.WindowsFileService>();
+        builder.Services.AddSingleton<IStartupService, Platforms.Windows.WindowsStartupService>();
 #endif
 
-            builder.Services
-                .AddSingleton<MainPage>()
-                .AddSingleton<MainPageViewModel>();
+        builder.Services
+            .AddSingleton<MainPage>()
+            .AddSingleton<MainPageViewModel>();
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+		builder.Logging.AddDebug();
 #endif
 
-            var app = builder.Build();
+        var app = builder.Build();
 
-            app.Services.GetRequiredService<IColorFilter>().Initialize();
+        app.Services.GetRequiredService<IColorFilter>().Initialize();
 
-            return app;
-        }
+        return app;
     }
 }

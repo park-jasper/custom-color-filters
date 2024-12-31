@@ -1,15 +1,11 @@
-﻿
-using CustomColorFilter.Contracts;
+﻿namespace CustomColorFilter;
 
-namespace CustomColorFilter
+public partial class App
 {
-    public partial class App : Application
+    public App(MainPage mainPage)
     {
-        public App(MainPage mainPage)
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-            MainPage = mainPage;
-        }
+        MainPage = mainPage;
     }
 }

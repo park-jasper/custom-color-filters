@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.Maui.ApplicationModel.Permissions;
+﻿using Domain.BusinessLogic;
 
-namespace CustomColorFilter.Model;
+namespace Domain.Model;
 
 // Taken from https://github.com/yanna92yar/greys/blob/master/greys/Matrices.cs
 public static class BuiltinMatrices
